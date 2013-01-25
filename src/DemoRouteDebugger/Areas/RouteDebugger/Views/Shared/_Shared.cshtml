@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Route Debugger</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Areas/RouteDebugger/css/rdstyle.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="row">
+                    <div class="span9">
+                        <ul class="nav">
+                            <li><a href="@Url.Action("Simulate")">Simulate</a></li>
+                            <li><a href="@Url.Action("Help")">Help</a></li>
+                        </ul>
+                    </div>
+                    <div class="span3">
+                        <a class="brand" href="#">Route Debugger</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderSection("feature", false)
+    <div class="container">
+        @RenderBody()
+    </div>
+    <script src="~/Scripts/jquery-1.9.0.min.js"></script>
+    <script src="~/Scripts/knockout-2.2.1.js"></script>
+    @RenderSection("scripts", false)
+</body>
+</html>
