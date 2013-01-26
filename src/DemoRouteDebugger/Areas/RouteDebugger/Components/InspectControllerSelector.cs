@@ -7,11 +7,13 @@ using System.Web.Http.Dispatcher;
 namespace RouteDebugger.Components
 {
     /// <summary>
-    /// Inspect controller selector wrap the original controller selector.
+    /// This class replaces the DefaultHttpControllerSelector (see RouteDebuggerConfig.cs).  
+    /// It uses  _delegating to call into DefaultHttpControllerSelector methods.
+    /// See http://www.asp.net/web-api/overview/web-api-routing-and-actions/routing-and-action-selection for more info.
     /// 
-    /// It exames the request header. If inspect header is found:
-    /// 1. It saves all candiate controllers in inspect data
-    /// 2. It maked the selected controller
+    /// The SelectController method examines the request header. If an inspection header is found:
+    ///     1. Saves all candidate controllers in inspection data.
+    ///     2. Marks the selected controller.
     /// </summary>
     public class InspectControllerSelector : IHttpControllerSelector
     {
@@ -41,12 +43,13 @@ namespace RouteDebugger.Components
                 request.Properties[RequestHelper.ControllerCache] = controllers;
             }
 
-            var selectedController = _delegating.SelectController(request);
+            // DefaultHttpControllerSelector.SelectController
+            var controllerDescriptor = _delegating.SelectController(request);
 
-            // if exceptino is not thrown
-            request.Properties[RequestHelper.SelectedController] = selectedController.ControllerName;
+            // if exception is not thrown
+            request.Properties[RequestHelper.SelectedController] = controllerDescriptor.ControllerName;
 
-            return selectedController;
+            return controllerDescriptor;
         }
     }
 }
