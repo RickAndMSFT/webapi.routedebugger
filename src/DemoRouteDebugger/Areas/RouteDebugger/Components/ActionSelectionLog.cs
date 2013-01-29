@@ -7,7 +7,8 @@ using System.Web.Http.Controllers;
 namespace RouteDebugger
 {
     /// <summary>
-    /// ActionSelectionLog store the information collected during action select simulating
+    /// Logs information collected when ActionSelectSimulator.Simulate is called. 
+    /// ActionSelectSimulator.Simulate replaces DefaultActionSelector.
     /// </summary>
     public class ActionSelectionLog
     {
@@ -36,16 +37,16 @@ namespace RouteDebugger
         }
 
         /// <summary>
-        /// Marking aciotns as selected in one stage.
+        /// Marking actions as selected in one stage.
         /// </summary>
-        /// <param name="actions">the actions to be marked</param>
-        /// <param name="marking">the functor picking the bool property of an action to be set to true.</param>
+        /// <param name="actions">The actions to be marked.</param>
+        /// <param name="marking">The functor picking the bool property of an action to be set to true.</param>
         internal void Mark(IEnumerable<HttpActionDescriptor> actions, Action<ActionSelectionInfo> marking)
         {
-            foreach (var each in actions)
+            foreach (var action in actions)
             {
                 ActionSelectionInfo found;
-                if (_actionDescriptors.TryGetValue(each, out found))
+                if (_actionDescriptors.TryGetValue(action, out found))
                 {
                     marking(found);
                 }
@@ -101,28 +102,28 @@ namespace RouteDebugger
         public bool? FoundByActionName { get; set; }
 
         /// <summary>
-        /// Is this action selected based on its action name and its supported http verb 
+        /// Is this action selected based on its action name and its supported http verb?
         /// </summary>
         public bool? FoundByActionNameWithRightVerb { get; set; }
 
         /// <summary>
-        /// Is this action selected based on its supported http verb
+        /// Is this action selected based on its supported http verb?
         /// </summary>
         public bool? FoundByVerb { get; set; }
 
         /// <summary>
-        /// Are this action's parameters match the ones in query string
+        /// Do this action's parameters match the ones in query string?
         /// </summary>
         public bool? FoundWithRightParam { get; set; }
 
         /// <summary>
-        /// Is this action finally selected by selection attribute
+        /// Is this action finally selected by selection attribute?
         /// </summary>
         public bool? FoundWithSelectorsRun { get; set; }
     }
 
     /// <summary>
-    /// Representing the parameters 
+    /// Represents the parameters.
     /// </summary>
     public class HttpParameterDescriptorInfo
     {

@@ -7,11 +7,11 @@ using System.Web.Http.Controllers;
 namespace RouteDebugger.Components
 {
     /// <summary>
-    /// Inspect action invoker hijack the original invoker. It examines the header before 
-    /// execute the action. If the inspect header exists, it stop executing the action but 
-    /// return the inspect data in a 200 response.
+    /// Hijacks the original invoker. It examines the header before 
+    /// executing the action. If the inspect header exists, returns the inspection data in a 200 response.
+    /// If the inspection header does not exist, the delegate calls the default InvokeActionAsync method.
     /// 
-    /// The inspect data saved in request property are collected when the request is passed
+    /// The inspection data saved in the request property are collected when the request is passed
     /// along the stack.
     /// </summary>
     public class InspectActionInvoker : IHttpActionInvoker

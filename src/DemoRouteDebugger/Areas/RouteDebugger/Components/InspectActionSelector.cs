@@ -7,10 +7,16 @@ using System.Web.Http.Controllers;
 namespace RouteDebugger.Components
 {
     /// <summary>
-    /// Inspect action selector wrap the original action selector.
+    /// This class replaces ApiControllerActionSelector (it's hooked up in RouteDebuggerConfig.cs). 
+    /// It uses  _delegating to call into ApiControllerActionSelector methods and it calls ActionSelectSimulator methods.
+    /// Private members of ApiControllerActionSelector cannot be called with a delegate, so a copy of the private members of
+    /// ApiControllerActionSelector are contained in the class ActionSelectSimulator.
+    ///
+    /// See http://www.asp.net/web-api/overview/web-api-routing-and-actions/routing-and-action-selection for more info.   
     /// 
-    /// It exames the request header. If inspect header is found, it run action selecting
-    /// simulator and save the inspect data in request property.
+    ///  The SelectAction method examines the request header. If an inspection header is found, it runs the 
+    ///  action selection simulator, saves the inspection data in the request property, then uses the delegate
+    ///  to run the ApiControllerActionSelector.SelectAction method.
     /// </summary>
     public class InspectActionSelector : IHttpActionSelector
     {

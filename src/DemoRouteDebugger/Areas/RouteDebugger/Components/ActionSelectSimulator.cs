@@ -12,11 +12,11 @@ using System.Web.Http.ValueProviders.Providers;
 namespace RouteDebugger.Components
 {
     /// <summary>
-    /// Simulating the action selecting and record the decision making process.
+    /// Simulate the action selection and record the decision making process.
     /// 
-    /// This class is basically a mimic of default IHttpActionSelector implementation. Unfortunately, the logic of DefaultActionSelector is
-    /// sealed in a private class, which preventing others from exposing any meaningful information. Large portion of the codes are copied
-    /// here to ensure the same selecting process is gone through.
+    /// This class is basically a copy of default IHttpActionSelector implementation (DefaultActionSelector) private members,
+    /// and methods where we have included logging.
+    /// The private members of the DefaultActionSelector are copied here, so we can access them.
     /// 
     /// Some help internal help classes are also copied to assist the process,
     /// </summary>
@@ -42,7 +42,8 @@ namespace RouteDebugger.Components
                 _actionDescriptors[i] = actionDescriptor;
                 HttpActionBinding actionBinding = actionDescriptor.ActionBinding;
 
-                // Building an action parameter name mapping to compare against the URI parameters coming from the request. Here we only take into account required parameters that are simple types and come from URI.
+                // Building an action parameter name mapping to compare against the URI parameters coming from the request. 
+                // Here we only take into account required parameters that are simple types and come from the URI.
                 _actionParameterNames.Add(
                     actionDescriptor,
                     actionBinding.ParameterBindings
@@ -54,13 +55,18 @@ namespace RouteDebugger.Components
 
         }
 
+        /// <summary>
+        ///  Troy: need description here.
+        /// </summary>
+        /// <param name="controllerContext"></param>
+        /// <returns></returns>
         public ActionSelectionLog Simulate(HttpControllerContext controllerContext)
         {
             Initialize(controllerContext.ControllerDescriptor);
 
             ActionSelectionLog log = new ActionSelectionLog(_actionDescriptors);
 
-            // if action name exists in route data, filter the action descriptors based on action name
+            // If the action name exists in route data, filter the action descriptors based on action name.
             ReflectedHttpActionDescriptor[] actionsFoundByMethod = null;
             var routeData = controllerContext.Request.GetRouteData();
             string actionName;
@@ -68,7 +74,7 @@ namespace RouteDebugger.Components
             {
                 var actionsFound = _actionNameMapping[actionName].OfType<ReflectedHttpActionDescriptor>().ToArray();
 
-                // filter actions based on verb
+                // Filter actions based on verb.
                 actionsFoundByMethod = actionsFound
                     .Where(actionDescriptor => actionDescriptor.SupportedHttpMethods.Contains(controllerContext.Request.Method))
                     .ToArray();
@@ -84,7 +90,7 @@ namespace RouteDebugger.Components
             {
                 log.ActionName = string.Empty;
 
-                // if action name doesn't exists, found out actions based on verb directly
+                // If action name doesn't exist, find actions based on HTTP verb.
                 log.HttpMethod = controllerContext.Request.Method;
 
                 if (string.IsNullOrEmpty(actionName))
@@ -95,7 +101,7 @@ namespace RouteDebugger.Components
                 }
             }
 
-            // if none action is found at this stage a failure must happen
+            // If no action is found at this stage a failure must happen.
             if (actionsFoundByMethod != null && actionsFoundByMethod.Length != 0)
             {
                 // filter the actions by parameters matching
@@ -117,7 +123,8 @@ namespace RouteDebugger.Components
 
 
         /// <summary>
-        /// A copy
+        /// This is a copy of the private ApiControllerActionSelector.FindActionsForVerb. It doesn't use the cache
+        /// but copies the contents of the FindActionsForVerbWorker method.
         /// </summary>
         private ReflectedHttpActionDescriptor[] FindActionsForVerb(HttpMethod verb)
         {
@@ -135,7 +142,7 @@ namespace RouteDebugger.Components
         }
 
         /// <summary>
-        /// A copy
+        /// This is an exact copy from ApiControllerActionSelector.
         /// </summary>
         private IEnumerable<ReflectedHttpActionDescriptor> FindActionUsingRouteAndQueryParameters(
             HttpControllerContext controllerContext,
@@ -188,7 +195,7 @@ namespace RouteDebugger.Components
         }
 
         /// <summary>
-        /// A copy
+        /// This is an exact copy from ApiControllerActionSelector.
         /// </summary>
         private static bool IsValidActionMethod(MethodInfo methodInfo)
         {
@@ -208,7 +215,7 @@ namespace RouteDebugger.Components
         }
 
         /// <summary>
-        /// A copy
+        /// This is an exact copy from ApiControllerActionSelector.
         /// </summary>
         private static bool IsSubset(string[] actionParameters, HashSet<string> routeAndQueryParameters)
         {
@@ -224,11 +231,12 @@ namespace RouteDebugger.Components
         }
 
         /// <summary>
-        /// A mimic
+        /// Replace the private method from ApiControllerActionSelector.
         /// 
-        /// Issue: IActionMethodSelector is an internal interface. CacheAttrsIActionMethodSelector is a internal
-        ///        property, too. The only implementation of IActionMethodSelector is NonActionAttribute, so the
-        ///        codes are converted to directly filter out method with that attribute.
+        /// The IActionMethodSelector interface used in the method is internal so we must make a copy. 
+        /// CacheAttrsIActionMethodSelector is also internal.
+        /// The default implementation of IActionMethodSelector finds methods marked with the NonActionAttribute, so the
+        /// code below is converted to directly filter out methods with that attribute.
         /// </summary>
         private static List<ReflectedHttpActionDescriptor> RunSelectionFilters(
             HttpControllerContext controllerContext,
@@ -250,8 +258,7 @@ namespace RouteDebugger.Components
                 }
                 else
                 {
-                    // Following codes will never happen, because there is no implementation of IActionMethodSelector
-                    // returns true so far. And IActionMethodSelector is an internal interface.
+                    // The following code will never run (it's always false), so it's commented out.
 
                     //bool match = Array.TrueForAll(attrs, selector => selector.IsValidForRequest(controllerContext, actionDescriptor.MethodInfo));
                     //if (match)
@@ -279,7 +286,8 @@ namespace RouteDebugger.Components
     }
 
     /// <summary>
-    /// A copy
+    /// A copy of HttpParameterBindingExtensions.cs with one change. HttpParameterBindingExtensions.WillReadUri calls the internal
+    /// interface IUriValueProvderFactory, so that code is also in this method.
     /// </summary>
     internal static class HttpParameterBindingExtensions
     {
@@ -307,7 +315,7 @@ namespace RouteDebugger.Components
     }
 
     /// <summary>
-    /// A copy
+    /// An exact copy of the TryGetValue method from  DictionaryExtensions.cs.
     /// </summary>
     internal static class DictionaryExtensions
     {

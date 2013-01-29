@@ -22,6 +22,8 @@ namespace DemoRouteDebugger.Areas.RouteDebugger
                 new { controller = "Center", action = "Simulate" }
             );
 
+            // Replace some of the default routing implementations with our custom debug
+            // implementations.
             RouteDebuggerConfig.Register(GlobalConfiguration.Configuration);
         }
     }
