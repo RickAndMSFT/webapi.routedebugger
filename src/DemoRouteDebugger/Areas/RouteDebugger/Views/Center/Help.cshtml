@@ -26,18 +26,23 @@
             </p>
         </div>
         <div class="span8">
-            <h3>Colums of details</h3>
-            <p>The first three columns are the information about the action. "Verb" column is the the HTTP VERB action support. "Name" column is the name of the action, and which is mapped in route. "Param" column is the parameters and corresponding types one action requires.</p>
+            <h3>Columns of details</h3>
+            <p>The first three columns are the information about the action.  "Verb" is the the HTTP VERB action supported. 
+                "Name" is the name of the action, which is mapped in the route. 
+                "Param" is the parameters and corresponding types the action requires.</p>
         </div>
     </div>
     <div class="row">
         <div class="span5">
             <h3>By Action Name</h3>
-            <p>The first stage is to exam the action based on it's name. Action name is extracted from route data. The actions found by name are then filtered by the verbs they support. One doesn't support the HTTP Verb of incoming request is filtered.</p>
+            <p>The first stage is to examine the action based on it's name. Action name is extracted from route data. 
+                The actions found by name are then filtered by the verbs they support.
+                 Actions that don't support the HTTP Verb of incoming request are filtered.</p>
         </div>
         <div class="span4">
             <h3>By Http Verb</h3>
-            <p>The second stage is skipped if above stage is executed. However if there isn't {action} in the selected route, then no action name is presented. It will directly filter all action based on their supported verb.</p>
+            <p>The second stage is skipped if above stage is executed. However if there isn't {action} in the selected route no action 
+                name is presented. It will directly filter all actions based on their supported verbs.</p>
         </div>
         <div class="span3">
             <h3>Later Stage</h3>
@@ -47,11 +52,11 @@
     <div class="row">
         <div class="span7">
             <h3>Cell</h3>
-            <p>A cell may be marked as true, false or empty. True and false means this action is examined in associated stage and the result is respectively postive or negative. Empty cell means the action is not examined, meaning the process was skipped.  </p>
+            <p>A cell may be marked as true, false or empty. True and false means this action is examined in associated stage and the result is respectively positive or negative. Empty cell means the action is not examined, meaning the process was skipped.  </p>
         </div>
         <div class="span5">
             <h3>Selection</h3>
-            <p>The matched action are marked in green. Ideally only action shall be chosed.</p>
+            <p>The matched action are marked in green. Ideally only action shall be chosen.</p>
         </div>
     </div>
 
